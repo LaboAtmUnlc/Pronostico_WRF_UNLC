@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Localidades WRF</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="index.html"><i></i><span>Pronóstico WRF</span></a>
+    <nav class="nav">
+      <a href="index.html">Pronóstico</a>
+      <a href="mapas.html">Mapas</a>
+      <a href="localidades.html" class="on">Localidades</a>
+    </nav>
+    <button class="menu-btn" type="button" aria-label="Lista de localidades">☰</button>
+  </header>
+
+  <div class="layout">
+    <aside class="side">
+      <h3>Localidades</h3>
+      <input type="search" placeholder="Buscar localidad…" aria-label="Buscar localidad">
+      <div class="lista"></div>
+      <div class="foot"></div>
+    </aside>
+
+    <main id="app">
+      <section class="card">
+        <div class="toolbar">
+          <div>
+            <h2 style="margin:0 0 4px">Todas las localidades</h2>
+            <div style="color:var(--muted);font-size:13px">Última corrida disponible de cada una · próximas 24 h</div>
+          </div>
+          <div class="seg" id="var">
+            <button data-v="t" class="on">Temperatura</button>
+            <button data-v="h">Humedad</button>
+            <button data-v="v">Viento</button>
+            <button data-v="p">Precipitación</button>
+          </div>
+        </div>
+      </section>
+      <section class="cards" id="cards"><div class="skel">Cargando…</div></section>
+    </main>
+  </div>
+  <footer>Tocá una localidad para ver su pronóstico horario completo.</footer>
+
+  <script src="assets/js/common.js"></script>
+  <script>
+  (async () => {
+    const VARS = {
+      t: { col: '--temp', f: x => x.Temperature },
+      h: { col: '--hum',  f: x => x.RH },
+      v: { col: '--wind', f: x => Meteo.viento(x.WindSpeed) },
+      p: { col: '--rain', f: x => x.PrecipAccum1hour, barras: true },
+    };
+    let sel = 't', datos = [];
+    const cont = document.getElementById('cards');
+
+    function spark(filas, v) {
+      const ys = filas.map(v.f), W = 240, H = 48, n = ys.length;
+      const min = v.barras ? 0 : Math.min(...ys), max = Math.max(...ys, v.barras ? 0.5 : min + 1);
+      const X = i => i / (n - 1) * W, Y = y => H - 3 - (y - min) / (max - min) * (H - 6);
+      if (v.barras) return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${ys.map((y, i) =>
+        `<rect x="${X(i) - 3}" y="${Y(y)}" width="6" height="${H - 3 - Y(y)}" rx="1.5" fill="var(${v.col})"/>`).join('')}
+        <line x1="0" x2="${W}" y1="${H - 3}" y2="${H - 3}" stroke="var(--line)"/></svg>`;
+      const d = ys.map((y, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)},${Y(y).toFixed(1)}`).join('');
+      return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><path d="${d}L${W},${H}L0,${H}Z" fill="var(${v.col})" opacity=".12"/>
+        <path d="${d}" fill="none" stroke="var(${v.col})" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>`;
+    }
+
+    function pintar() {
+      cont.innerHTML = datos.map(({ l, filas }) => {
+        const p = filas.slice(0, 24), f = Meteo.filaActual(filas), r = Meteo.resumen(p);
+        return `<a class="card lc" href="index.html#${encodeURIComponent(l.slug)}">
+          <div class="hd"><b>${l.nombre}</b><span class="num">${f.Temperature.toFixed(0)}°</span></div>
+          ${spark(p, VARS[sel])}
+          <div class="row"><span>Mín / máx</span><span class="num">${r.tmin.toFixed(1)}° / ${r.tmax.toFixed(1)}°</span></div>
+          <div class="row"><span>Humedad ahora</span><span class="num">${f.RH.toFixed(0)}%</span></div>
+          <div class="row"><span>Viento máx.</span><span class="num">${r.vmax.toFixed(0)} km/h</span></div>
+          <div class="row"><span>Precip. 24 h</span><span class="num">${r.pp.toFixed(1)} mm</span></div>
+          <div class="row"><span class="chip">${Meteo.fmtCorrida(l.corrida, l.dominio)}</span></div>
+        </a>`;
+      }).join('');
+    }
+
+    try {
+      const m = await Meteo.manifest();
+      Meteo.barraLateral(null);
+      datos = await Promise.all(m.localidades.map(async l => ({ l, filas: await Meteo.cargar(l.archivo) })));
+      pintar();
+      document.getElementById('var').addEventListener('click', e => {
+        const b = e.target.closest('button'); if (!b) return;
+        sel = b.dataset.v;
+        e.currentTarget.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+        pintar();
+      });
+    } catch (e) { Meteo.error(document.getElementById('app'), e); }
+  })();
+  </script>
+</body>
+</html>

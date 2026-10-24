@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mapas WRF</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="index.html"><i></i><span>Pronóstico WRF</span></a>
+    <nav class="nav">
+      <a href="index.html">Pronóstico</a>
+      <a href="mapas.html" class="on">Mapas</a>
+      <a href="localidades.html">Localidades</a>
+    </nav>
+    <button class="menu-btn" type="button" aria-label="Lista de localidades">☰</button>
+  </header>
+
+  <div class="layout">
+    <aside class="side">
+      <h3>Localidades</h3>
+      <input type="search" placeholder="Buscar localidad…" aria-label="Buscar localidad">
+      <div class="lista"></div>
+      <div class="foot"></div>
+    </aside>
+
+    <main id="app">
+      <section class="card">
+        <h2 style="margin:0 0 4px">Mapas</h2>
+        <div class="meta" style="color:var(--muted);font-size:13px" id="metaMapas">Animaciones generadas por el modelo · usá los controles de cada mapa para recorrer las horas</div>
+      </section>
+      <div id="mapas" style="display:flex;flex-direction:column;gap:20px"></div>
+    </main>
+  </div>
+  <footer>Los mapas son archivos HTML independientes ubicados en <code>data/mapas/</code>.</footer>
+
+  <script src="assets/js/common.js"></script>
+  <script>
+  (async () => {
+    try {
+      const m = await Meteo.manifest();
+      Meteo.barraLateral(null);
+      const mapas = m.mapas;
+      if (!mapas.length) throw new Error('No hay mapas en data/mapas/.');
+      if (mapas[0].corrida) document.getElementById('metaMapas').textContent =
+        Meteo.fmtCorrida(mapas[0].corrida, 'd01') + ' · usá los controles de cada mapa para recorrer las horas';
+      // un panel por mapa, uno debajo del otro, mostrando cada HTML tal cual
+      const cont = document.getElementById('mapas');
+      mapas.forEach((x, i) => {
+        const sec = document.createElement('section');
+        sec.className = 'card';
+        sec.id = x.id;
+        sec.innerHTML = `<h2>${x.titulo}</h2>
+          <div class="viewer"><div class="cargando">Cargando mapa…</div>
+          <iframe title="${x.titulo}" src="${x.archivo}" ${i ? 'loading="lazy"' : ''}></iframe></div>`;
+        sec.querySelector('iframe').addEventListener('load', () => { sec.querySelector('.cargando').hidden = true; });
+        cont.appendChild(sec);
+      });
+    } catch (e) { Meteo.error(document.getElementById('app'), e); }
+  })();
+  </script>
+</body>
+</html>

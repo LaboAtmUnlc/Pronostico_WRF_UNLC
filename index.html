@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pronóstico WRF</title>
+  <meta name="description" content="Pronóstico horario de temperatura, humedad, viento y precipitación (modelo WRF).">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="index.html"><i></i><span>Pronóstico WRF</span></a>
+    <nav class="nav">
+      <a href="index.html" class="on">Pronóstico</a>
+      <a href="mapas.html">Mapas</a>
+    </nav>
+    <button class="menu-btn" type="button" aria-label="Lista de localidades">☰</button>
+  </header>
+
+  <div class="layout">
+    <aside class="side">
+      <h3>Localidades</h3>
+      <input type="search" placeholder="Buscar localidad…" aria-label="Buscar localidad">
+      <div class="lista"></div>
+      <div class="foot"></div>
+    </aside>
+
+    <main id="app">
+      <section class="card">
+        <div class="hero">
+          <div>
+            <h1 id="nombre">—</h1>
+            <div class="meta"><span class="chip ok" id="corrida">cargando…</span> <span id="archivo"></span></div>
+          </div>
+          <div class="now">
+            <div class="big" id="tnow">–</div>
+            <div class="lbl" id="nowlbl"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats" id="stats"></section>
+
+      <section class="card">
+        <div class="toolbar">
+          <h2 style="margin:0">Pronóstico horario</h2>
+          <div class="seg" id="dias"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Temperatura y punto de rocío <span class="sub"><span style="color:var(--temp)">━</span> temperatura &nbsp; <span style="color:var(--dew)">┅</span> rocío · °C</span></h2>
+        <div class="chart"><div id="cTemp" style="height:100%"></div></div>
+      </section>
+
+      <div class="grid2">
+        <section class="card">
+          <h2>Humedad relativa <span class="sub">%</span></h2>
+          <div class="chart sm"><div id="cHum" style="height:100%"></div></div>
+        </section>
+        <section class="card">
+          <h2>Viento <span class="sub">km/h · flechas: hacia dónde sopla</span></h2>
+          <div class="chart sm"><div id="cWind" style="height:100%"></div></div>
+        </section>
+      </div>
+
+      <section class="card">
+        <h2>Precipitación acumulada horaria <span class="sub" id="ppTotal">mm</span></h2>
+        <div class="chart sm"><div id="cPP" style="height:100%"></div></div>
+      </section>
+
+      <section class="card">
+        <h2>Tabla horaria <span class="sub">hora local</span></h2>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Hora</th><th>Temp</th><th>Rocío</th><th>Humedad</th><th>Viento</th><th>Dir.</th><th>Presión</th><th>Precip.</th></tr></thead>
+            <tbody id="tabla"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+  <footer>Datos: salida del modelo WRF. Se muestra siempre la corrida más reciente disponible para cada localidad.</footer>
+
+  <script src="assets/js/graficos.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/pronostico.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Precipitación acumulada 24 h</title>
+<style>html,body{margin:0;height:100%;background:#0f1419;font-family:system-ui,sans-serif;color:#e6e9ee}
+.w{position:relative;height:100%;display:flex;flex-direction:column}h1{font-size:14px;font-weight:600;margin:0;padding:12px 14px;letter-spacing:.02em}
+small{opacity:.6;font-weight:400}canvas{flex:1;width:100%;min-height:0}
+.cb{display:flex;align-items:center;gap:8px;padding:10px 14px;font-size:11px}.bar{flex:1;height:8px;border-radius:4px;background:linear-gradient(90deg,rgb(200,230,255),rgb(120,190,250),rgb(40,120,230),rgb(20,60,180),rgb(120,40,170),rgb(220,40,140))}</style></head>
+<body><div class="w"><h1>Precipitación acumulada 24 h <small>· WRF d01 · corrida 2026-10-23 06Z · MUESTRA</small></h1><canvas id="c"></canvas>
+<div class="cb"><span>0</span><div class="bar"></div><span>25 mm</span></div></div>
+<script>
+const cols=[[200, 230, 255], [120, 190, 250], [40, 120, 230], [20, 60, 180], [120, 40, 170], [220, 40, 140]];const tipo="pp";
+const c=document.getElementById('c'),x=c.getContext('2d');
+function f(u,v){let s=0;s=.9*Math.exp(-((u-.62)**2/.02+(v-.6)**2/.05))+.6*Math.exp(-((u-.3)**2/.01+(v-.2)**2/.02));return Math.max(0,Math.min(1,s));}
+function col(s){const n=cols.length-1,i=Math.min(n-1,Math.floor(s*n)),t=s*n-i,a=cols[i],b=cols[i+1];
+return `rgb(${a[0]+(b[0]-a[0])*t|0},${a[1]+(b[1]-a[1])*t|0},${a[2]+(b[2]-a[2])*t|0})`;}
+const pts=[["Merlo",.72,.38],["San Luis",.38,.42],["V. Mercedes",.62,.7],["La Toma",.5,.3],["Tilisarao",.66,.22]];
+function draw(){const d=devicePixelRatio||1,W=c.clientWidth,H=c.clientHeight;c.width=W*d;c.height=H*d;x.scale(d,d);
+const st=6;for(let i=0;i<W;i+=st)for(let j=0;j<H;j+=st){const s=f(i/W,j/H);x.fillStyle=tipo==='pp'&&s<.08?'#1a2129':col(s);x.fillRect(i,j,st,st);}
+if(tipo==='viento'){x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=1.2;for(let i=20;i<W;i+=38)for(let j=20;j<H;j+=38){
+const a=Math.sin(i/W*3)+Math.cos(j/H*2)+.8,L=8+f(i/W,j/H)*12;x.beginPath();x.moveTo(i,j);const ex=i+Math.cos(a)*L,ey=j+Math.sin(a)*L;x.lineTo(ex,ey);
+x.lineTo(ex-Math.cos(a-.5)*5,ey-Math.sin(a-.5)*5);x.moveTo(ex,ey);x.lineTo(ex-Math.cos(a+.5)*5,ey-Math.sin(a+.5)*5);x.stroke();}}
+x.font='11px system-ui';for(const[n,u,v]of pts){const px=u*W,py=v*H;x.fillStyle='#fff';x.beginPath();x.arc(px,py,3,0,7);x.fill();
+x.fillStyle='rgba(0,0,0,.55)';const tw=x.measureText(n).width;x.fillRect(px+6,py-8,tw+8,16);x.fillStyle='#fff';x.fillText(n,px+10,py+4);}}
+draw();addEventListener('resize',()=>{x.setTransform(1,0,0,1,0,0);draw();});
+</script></body></html>
