@@ -4,7 +4,7 @@
 # =====================================================================
 
 # Carpeta donde se generan los CSV (wrfout_d01_AAAA-MM-DD_HHZ_data_<localidad>.csv)
-RUTA_CSV="/home/meteo/meteo-web/data/pronostico"
+RUTA_CSV="/home/meteo/meteo-web/data/pronosticos"
 
 # Carpeta donde se generan los mapas HTML
 RUTA_MAPAS="/home/meteo/meteo-web/data/mapas"
