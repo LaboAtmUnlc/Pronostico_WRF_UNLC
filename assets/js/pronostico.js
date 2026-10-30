@@ -36,10 +36,9 @@
     document.querySelectorAll('.side .loc').forEach(a => a.classList.toggle('on', a.dataset.slug === slug));
     document.querySelector('.side')?.classList.remove('open');
 
-    document.title = `${loc.nombre} · Pronóstico WRF`;
+    document.title = `${loc.nombre} · Pronóstico UNLC`;
     document.getElementById('nombre').textContent = loc.nombre;
-    document.getElementById('corrida').textContent = Meteo.fmtCorrida(loc.corrida, loc.dominio);
-    document.getElementById('archivo').innerHTML = `<span class="chip">${loc.archivo.split('/').pop()}</span>`;
+    document.getElementById('corrida').textContent = Meteo.fmtCorrida(loc.corrida);
 
     const f = Meteo.filaActual(filas);
     document.getElementById('tnow').textContent = f.Temperature.toFixed(1) + '°';
@@ -76,10 +75,11 @@
   }
 
   function graficos(d) {
-    const etiquetas = d.map(x => diaSel === 'todo' && x.hora === '00:00' ? Meteo.fmtDiaCorto(x.fecha) : x.hora);
-    const titulos = d.map(x => `${Meteo.fmtDiaCorto(x.fecha)} · ${x.hora} h`);
-    const etiquetasDia = d.map(x => `${Meteo.fmtDiaCorto(x.fecha)} ${x.hora.slice(0, 2)}h`);
-    const G = (id, op) => Grafico.dibujar(document.getElementById(id), { etiquetas, etiquetasDia, titulos, ...op });
+    const etiquetas = d.map(x => x.hora);
+    const titulos = d.map(x => `${Meteo.fmtDiaCorto(x.fecha)} · ${x.hora} hs`);
+    const horas = d.map(x => x.hora), fechas = d.map(x => x.fecha);
+    const dias = d.map(x => Meteo.fmtDia(x.fecha));
+    const G = (id, op) => Grafico.dibujar(document.getElementById(id), { etiquetas, titulos, horas, fechas, dias, ...op });
 
     G('cTemp', { series: [
       { datos: d.map(x => x.Temperature), color: 'var(--temp)', nombre: 'Temperatura', relleno: true, fmt: v => v.toFixed(1) + ' °C' },
@@ -99,12 +99,11 @@
     const maxPP = Math.max(1, ...d.map(x => x.PrecipAccum1hour));
     let html = '', dia = '';
     for (const x of d) {
-      if (x.fecha !== dia) { dia = x.fecha; html += `<tr class="day"><td colspan="8">${Meteo.fmtDia(dia)}</td></tr>`; }
+      if (x.fecha !== dia) { dia = x.fecha; html += `<tr class="day"><td colspan="7">${Meteo.fmtDia(dia)}</td></tr>`; }
       const pp = x.PrecipAccum1hour;
       html += `<tr class="${x === actual ? 'cur' : ''}">
         <td>${x.hora}</td>
         <td style="color:var(--temp)">${x.Temperature.toFixed(1)}°</td>
-        <td>${x.DewPoint.toFixed(1)}°</td>
         <td>${x.RH.toFixed(0)}%</td>
         <td>${Meteo.viento(x.WindSpeed).toFixed(0)} km/h</td>
         <td>${Meteo.flecha(x.Winddir)} ${Meteo.dirTexto(x.Winddir)}</td>

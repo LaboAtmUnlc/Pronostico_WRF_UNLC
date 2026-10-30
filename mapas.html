@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Mapas WRF</title>
+  <title>Mapas · Pronóstico UNLC</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
   <header class="top">
-    <a class="brand" href="index.html"><i></i><span>Pronóstico WRF</span></a>
+    <a class="brand" href="index.html"><i></i><span class="brand-txt"><b>Pronóstico UNLC para la región</b><small>(modelo experimental WRF-UNLC)</small></span></a>
     <nav class="nav">
       <a href="index.html">Pronóstico</a>
       <a href="mapas.html" class="on">Mapas</a>
@@ -46,7 +46,7 @@
       const mapas = m.mapas;
       if (!mapas.length) throw new Error('No hay mapas en data/mapas/.');
       if (mapas[0].corrida) document.getElementById('metaMapas').textContent =
-        Meteo.fmtCorrida(mapas[0].corrida, 'd01') + ' · usá los controles de cada mapa para recorrer las horas';
+        Meteo.fmtCorrida(mapas[0].corrida) + ' · usá los controles de cada mapa para recorrer las horas';
       // un panel por mapa, uno debajo del otro, mostrando cada HTML tal cual
       const cont = document.getElementById('mapas');
       mapas.forEach((x, i) => {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Pronóstico WRF</title>
+  <title>Pronóstico UNLC</title>
   <meta name="description" content="Pronóstico horario de temperatura, humedad, viento y precipitación (modelo WRF).">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -11,7 +11,7 @@
 </head>
 <body>
   <header class="top">
-    <a class="brand" href="index.html"><i></i><span>Pronóstico WRF</span></a>
+    <a class="brand" href="index.html"><i></i><span class="brand-txt"><b>Pronóstico UNLC para la región</b><small>(modelo experimental WRF-UNLC)</small></span></a>
     <nav class="nav">
       <a href="index.html" class="on">Pronóstico</a>
       <a href="mapas.html">Mapas</a>
@@ -32,7 +32,7 @@
         <div class="hero">
           <div>
             <h1 id="nombre">—</h1>
-            <div class="meta"><span class="chip ok" id="corrida">cargando…</span> <span id="archivo"></span></div>
+            <div class="meta"><span class="chip ok" id="corrida">cargando…</span> <span class="inst">Laboratorio de Ciencias de la Atmósfera · Universidad Nacional de los Comechingones</span></div>
           </div>
           <div class="now">
             <div class="big" id="tnow">–</div>
@@ -75,14 +75,14 @@
         <h2>Tabla horaria <span class="sub">hora local</span></h2>
         <div class="tbl-wrap">
           <table>
-            <thead><tr><th>Hora</th><th>Temp</th><th>Rocío</th><th>Humedad</th><th>Viento</th><th>Dir.</th><th>Presión</th><th>Precip.</th></tr></thead>
+            <thead><tr><th>Hora</th><th>Temp</th><th>Humedad</th><th>Viento</th><th>Dir.</th><th>Presión</th><th>Precip.</th></tr></thead>
             <tbody id="tabla"></tbody>
           </table>
         </div>
       </section>
     </main>
   </div>
-  <footer>Datos: salida del modelo WRF. Se muestra siempre la corrida más reciente disponible para cada localidad.</footer>
+  <footer>Datos: modelo experimental WRF-UNLC. Se muestra siempre la corrida más reciente disponible para cada localidad.</footer>
 
   <script src="assets/js/graficos.js"></script>
   <script src="assets/js/common.js"></script>

@@ -38,7 +38,7 @@ const Grafico = (() => {
     if (op.ymin != null) e.min = op.ymin; if (op.ymax != null) e.max = op.ymax;
     e.ticks = e.ticks.filter(t => t >= e.min - 1e-9 && t <= e.max + 1e-9);
 
-    const m = { l: 38, r: 10, t: op.flechas ? 26 : 10, b: 24 };
+    const m = { l: 38, r: 10, t: op.flechas ? 26 : 10, b: op.horas ? 40 : 24 };
     const iw = W - m.l - m.r, ih = H - m.t - m.b;
     const X = barras ? (i => m.l + (i + .5) * iw / n) : (i => m.l + (n > 1 ? i * iw / (n - 1) : iw / 2));
     const Y = v => m.t + ih - (v - e.min) / (e.max - e.min) * ih;
@@ -53,16 +53,39 @@ const Grafico = (() => {
       const tx = el('text', { x: m.l - 8, y: Y(t) + 4, 'text-anchor': 'end', fill: 'var(--muted)', 'font-size': 11, 'font-family': 'var(--mono)' });
       tx.textContent = +t.toFixed(2); svg.appendChild(tx);
     }
-    // eje X: etiquetas espaciadas
-    // paso de etiquetas alineado a 1/2/3/6/12/24 h; si es grande se usan etiquetas con día
-    const crudo = Math.max(1, Math.ceil(n / Math.max(2, Math.floor(iw / 70))));
-    const cada = [1, 2, 3, 6, 12, 24, 48].find(x => x >= crudo * .75) || crudo;
-    const labs = cada >= 12 && op.etiquetasDia ? op.etiquetasDia : op.etiquetas;
-    labs.forEach((lab, i) => {
-      if (i % cada) return;
-      const tx = el('text', { x: X(i), y: H - 6, 'text-anchor': 'middle', fill: 'var(--muted)', 'font-size': 11 });
-      tx.textContent = lab; svg.appendChild(tx);
-    });
+    // eje X: horas ("06:00 hs") cada 3/6/12/24 h según el ancho, y debajo el día
+    if (op.horas && op.fechas) {
+      const porEtiqueta = n / Math.max(1, Math.floor(iw / 64));
+      const cada = [3, 6, 12, 24].find(x => x >= porEtiqueta) || 24;
+      const yBase = m.t + ih;
+      op.horas.forEach((h, i) => {
+        if (+h.slice(0, 2) % cada) return;
+        svg.appendChild(el('line', { x1: X(i), x2: X(i), y1: yBase, y2: yBase + 4, stroke: 'var(--muted)', 'stroke-width': 1 }));
+        const tx = el('text', { x: X(i), y: yBase + 16, 'text-anchor': 'middle', fill: 'var(--muted)', 'font-size': 11 });
+        tx.textContent = h + ' hs'; svg.appendChild(tx);
+      });
+      // un rótulo por día, centrado en su tramo, y una línea suave en cada 00:00
+      const paso = barras ? iw / n : (n > 1 ? iw / (n - 1) : iw);
+      let ini = 0;
+      for (let i = 1; i <= n; i++) {
+        if (i < n && op.fechas[i] === op.fechas[ini]) continue;
+        const x0 = Math.max(m.l, X(ini) - (barras ? paso / 2 : 0)), x1 = Math.min(W - m.r, X(i - 1) + (barras ? paso / 2 : 0));
+        if (ini > 0) svg.appendChild(el('line', { x1: x0, x2: x0, y1: m.t, y2: yBase + 30, stroke: 'var(--line)', 'stroke-width': 1, 'stroke-dasharray': '3 3' }));
+        const etiqueta = op.dias ? op.dias[ini] : op.fechas[ini];
+        if (x1 - x0 >= etiqueta.length * 6) {
+          const tx = el('text', { x: (x0 + x1) / 2, y: yBase + 32, 'text-anchor': 'middle', fill: 'var(--ink)', 'font-size': 11.5, 'font-weight': 700 });
+          tx.textContent = etiqueta; svg.appendChild(tx);
+        }
+        ini = i;
+      }
+    } else {
+      const cada = Math.max(1, Math.ceil(n / Math.max(2, Math.floor(iw / 70))));
+      op.etiquetas.forEach((lab, i) => {
+        if (i % cada) return;
+        const tx = el('text', { x: X(i), y: H - 6, 'text-anchor': 'middle', fill: 'var(--muted)', 'font-size': 11 });
+        tx.textContent = lab; svg.appendChild(tx);
+      });
+    }
 
     // series
     for (const s of op.series) {

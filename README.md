@@ -1,4 +1,6 @@
-# Pronóstico WRF — sitio web estático
+# Pronóstico UNLC para la región — sitio web estático
+
+Modelo experimental WRF-UNLC · Laboratorio de Ciencias de la Atmósfera · Universidad Nacional de los Comechingones.
 
 Sitio minimalista para publicar en **GitHub Pages** la salida del modelo WRF:
 pronóstico horario por localidad y mapas HTML animados.
@@ -7,11 +9,11 @@ pronóstico horario por localidad y mapas HTML animados.
 
 | Página | Qué muestra |
 |---|---|
-| `index.html` | Pronóstico horario (temperatura, punto de rocío, humedad, viento, precipitación horaria): selector de días, 4 gráficos y tabla. Localidad por URL: `index.html?loc=merlo` |
+| `index.html` | Pronóstico horario (temperatura, punto de rocío, humedad, viento, precipitación horaria): selector de días, 4 gráficos con horas y días en el eje y tabla horaria. Localidad por URL: `index.html#merlo` |
 | `mapas.html` | Muestra los mapas HTML de `data/mapas/` tal cual, uno debajo del otro (hoy: precipitación acumulada y reflectividad máxima) |
 | `localidades.html` | Tarjetas comparativas de todas las localidades con selector de variable |
 
-Las tres páginas tienen la **lista lateral de localidades** (con buscador), y cada una muestra la temperatura actual, mín/máx, viento y lluvia de su último CSV.
+Las tres páginas tienen la **lista lateral de localidades** (con buscador), y cada una muestra la temperatura actual, mín/máx, viento y la **lluvia acumulada del día** (de 00:00 a 23:00) de su último CSV.
 
 ## Estructura
 
@@ -20,6 +22,7 @@ Las tres páginas tienen la **lista lateral de localidades** (con buscador), y c
 ├── assets/
 │   ├── css/style.css
 │   ├── js/common.js        ← lectura del manifest, último CSV, cálculos, lateral
+│   ├── js/graficos.js      ← gráficos SVG
 │   └── js/pronostico.js    ← página principal
 ├── data/
 │   ├── pronosticos/        ← acá van los CSV del modelo
@@ -125,9 +128,9 @@ y abrí http://127.0.0.1:8000. (Con doble clic sobre `index.html` no funciona: e
 - **Viento**: se asume `WindSpeed` en m/s y se muestra en km/h (`Meteo.viento` en `common.js`).
 - **Hora**: la columna `Time` se muestra tal cual, como hora local.
 - **Humedad relativa**: se calcula a partir de `Temperature` y `DewPoint` (fórmula de Magnus).
+- **Lluvia diaria**: la lista de localidades suma `PrecipAccum1hour` de 00:00 a 23:00 del día en curso; el primer día de cada corrida empieza a las 03:00.
 - **Localidad principal**: `"principal": "merlo"` en `generar_manifest.py`.
 - **Nombres de localidades**: `data/localidades.json` traduce el nombre del archivo al nombre que se muestra (ej. `c_rdoba` → Córdoba). Si aparece una localidad nueva que no está en la lista, se muestra con el nombre del archivo; agregala ahí para corregir acentos.
 - **Mapas**: son las animaciones HTML del WRF (`wrfout_d01_<fecha>_<HH>Z_<VARIABLE>.html`) y se publican tal cual. El texto de cada botón sale de `data/variables.json` según la variable del nombre (`mdBZ` → Reflectividad máxima). Si agregás una variable nueva, sumala ahí.
 - **Tamaño**: cada corrida suma ~33 MB de mapas. Con `GUARDAR_HISTORIAL=0` (en `config.sh`) cada envío reemplaza al anterior y el repositorio no crece; con `1` se guarda todo el historial y crece ~130 MB por día.
 - Para borrar corridas viejas y no inflar el repo, podés conservar solo las últimas N por localidad.
-# Pronostico_WRF_UNLC

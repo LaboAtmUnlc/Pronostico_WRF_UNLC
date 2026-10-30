@@ -91,8 +91,14 @@ const Meteo = (() => {
 
   const fmtDia = (f) => new Date(f + 'T12:00:00').toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'short' });
   const fmtDiaCorto = (f) => new Date(f + 'T12:00:00').toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric' });
-  function fmtCorrida(iso, dom) {
-    return `WRF ${dom || ''} · corrida ${iso.slice(8, 10)}/${iso.slice(5, 7)}/${iso.slice(0, 4)} ${iso.slice(11, 13)}Z`;
+  // fecha y hora de la corrida, tomadas del nombre del archivo
+  function fmtCorrida(iso) {
+    return `Corrida ${iso.slice(8, 10)}/${iso.slice(5, 7)}/${iso.slice(0, 4)} ${iso.slice(11, 13)}Z`;
+  }
+
+  // precipitación acumulada del día calendario (de 00:00 a 23:00 inclusive)
+  function ppDiaria(filas, fecha) {
+    return filas.filter(f => f.fecha === fecha).reduce((s, f) => s + (f.PrecipAccum1hour || 0), 0);
   }
 
   function resumen(filas) {
@@ -121,16 +127,18 @@ const Meteo = (() => {
       lista.appendChild(a);
       cargar(l.archivo).then(filas => {
         const f = filaActual(filas), r = resumen(filas.slice(0, 24));
+        const pp = ppDiaria(filas, f.fecha);
         a.querySelector('.t').textContent = f.Temperature.toFixed(0) + '°';
         a.querySelector('small').innerHTML =
-          `<span>${r.tmin.toFixed(0)}° / ${r.tmax.toFixed(0)}°</span><span>${flecha(f.Winddir)} ${viento(f.WindSpeed).toFixed(0)} km/h</span><span>${r.pp.toFixed(1)} mm</span>`;
+          `<span>${r.tmin.toFixed(0)}° / ${r.tmax.toFixed(0)}°</span><span>${flecha(f.Winddir)} ${viento(f.WindSpeed).toFixed(0)} km/h</span>` +
+          `<span title="Precipitación acumulada del ${fmtDiaCorto(f.fecha)} (00 a 23 h)">${pp.toFixed(1)} mm</span>`;
       }).catch(() => { a.querySelector('small').textContent = 'sin datos'; });
     }
     side.querySelector('input').addEventListener('input', e => {
       const q = e.target.value.toLowerCase();
       lista.querySelectorAll('.loc').forEach(x => (x.style.display = x.dataset.nombre.includes(q) ? '' : 'none'));
     });
-    side.querySelector('.foot').textContent = `Índice actualizado: ${new Date(m.generado).toLocaleString('es-AR')}`;
+    side.querySelector('.foot').innerHTML = `Precipitación: acumulada del día (00 a 23 h).<br>Índice actualizado: ${new Date(m.generado).toLocaleString('es-AR')}`;
     document.querySelector('.menu-btn')?.addEventListener('click', () => side.classList.toggle('open'));
   }
 
@@ -143,5 +151,5 @@ const Meteo = (() => {
   const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 
   return { manifest, cargar, humedad, dirTexto, flecha, viento, UNIDAD_VIENTO, filaActual, fmtDia, fmtDiaCorto,
-           fmtCorrida, resumen, barraLateral, error, css, parseNombre };
+           fmtCorrida, ppDiaria, resumen, barraLateral, error, css, parseNombre };
 })();

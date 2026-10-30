@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Localidades WRF</title>
+  <title>Localidades · Pronóstico UNLC</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
   <header class="top">
-    <a class="brand" href="index.html"><i></i><span>Pronóstico WRF</span></a>
+    <a class="brand" href="index.html"><i></i><span class="brand-txt"><b>Pronóstico UNLC para la región</b><small>(modelo experimental WRF-UNLC)</small></span></a>
     <nav class="nav">
       <a href="index.html">Pronóstico</a>
       <a href="mapas.html">Mapas</a>
@@ -81,7 +81,7 @@
           <div class="row"><span>Humedad ahora</span><span class="num">${f.RH.toFixed(0)}%</span></div>
           <div class="row"><span>Viento máx.</span><span class="num">${r.vmax.toFixed(0)} km/h</span></div>
           <div class="row"><span>Precip. 24 h</span><span class="num">${r.pp.toFixed(1)} mm</span></div>
-          <div class="row"><span class="chip">${Meteo.fmtCorrida(l.corrida, l.dominio)}</span></div>
+          <div class="row"><span class="chip">${Meteo.fmtCorrida(l.corrida)}</span></div>
         </a>`;
       }).join('');
     }
