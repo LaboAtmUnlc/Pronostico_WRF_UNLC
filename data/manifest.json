@@ -1,7 +1,110 @@
 {
-  "generado": "2026-10-30T15:56:09Z",
+  "generado": "2026-10-31T14:13:14Z",
   "principal": "merlo",
-  "localidades": [],
-  "archivos": [],
-  "mapas": []
+  "localidades": [
+    {
+      "slug": "concaran",
+      "nombre": "Concarán",
+      "archivo": "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_concaran.csv",
+      "corrida": "2026-10-31T00:00Z",
+      "dominio": "d01"
+    },
+    {
+      "slug": "córdoba",
+      "nombre": "Córdoba",
+      "archivo": "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_córdoba.csv",
+      "corrida": "2026-10-31T00:00Z",
+      "dominio": "d01"
+    },
+    {
+      "slug": "la_punilla",
+      "nombre": "La Punilla",
+      "archivo": "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_la_punilla.csv",
+      "corrida": "2026-10-31T00:00Z",
+      "dominio": "d01"
+    },
+    {
+      "slug": "lujan",
+      "nombre": "Luján",
+      "archivo": "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_lujan.csv",
+      "corrida": "2026-10-31T00:00Z",
+      "dominio": "d01"
+    },
+    {
+      "slug": "mendoza",
+      "nombre": "Mendoza",
+      "archivo": "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_mendoza.csv",
+      "corrida": "2026-10-31T00:00Z",
+      "dominio": "d01"
+    },
+    {
+      "slug": "merlo",
+      "nombre": "Merlo",
+      "archivo": "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_merlo.csv",
+      "corrida": "2026-10-31T00:00Z",
+      "dominio": "d01"
+    },
+    {
+      "slug": "naschel",
+      "nombre": "Naschel",
+      "archivo": "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_naschel.csv",
+      "corrida": "2026-10-31T00:00Z",
+      "dominio": "d01"
+    },
+    {
+      "slug": "san_luis",
+      "nombre": "San Luis",
+      "archivo": "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_san_luis.csv",
+      "corrida": "2026-10-31T00:00Z",
+      "dominio": "d01"
+    },
+    {
+      "slug": "sta_rosa_co",
+      "nombre": "Santa Rosa del Conlara",
+      "archivo": "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_sta_rosa_co.csv",
+      "corrida": "2026-10-31T00:00Z",
+      "dominio": "d01"
+    },
+    {
+      "slug": "tilisarao",
+      "nombre": "Tilisarao",
+      "archivo": "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_tilisarao.csv",
+      "corrida": "2026-10-31T00:00Z",
+      "dominio": "d01"
+    },
+    {
+      "slug": "villa_larca",
+      "nombre": "Villa Larca",
+      "archivo": "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_villa_larca.csv",
+      "corrida": "2026-10-31T00:00Z",
+      "dominio": "d01"
+    }
+  ],
+  "archivos": [
+    "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_concaran.csv",
+    "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_córdoba.csv",
+    "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_la_punilla.csv",
+    "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_lujan.csv",
+    "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_mendoza.csv",
+    "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_merlo.csv",
+    "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_naschel.csv",
+    "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_san_luis.csv",
+    "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_sta_rosa_co.csv",
+    "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_tilisarao.csv",
+    "data/pronosticos/wrfout_d01_2026-10-31_00Z_data_villa_larca.csv"
+  ],
+  "mapas": [
+    {
+      "id": "precipaccum",
+      "archivo": "data/mapas/wrfout_d01_2026-10-31_00Z_PRECIPACCUM.html",
+      "titulo": "Precipitación acumulada (mm)",
+      "corrida": "2026-10-31T00:00Z"
+    },
+    {
+      "id": "mdbz",
+      "archivo": "data/mapas/wrfout_d01_2026-10-31_00Z_mdBZ.html",
+      "titulo": "Reflectividad máxima (dBZ)",
+      "corrida": "2026-10-31T00:00Z"
+    }
+  ]
 }
